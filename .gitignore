@@ -1,3 +1,4 @@
 .pure/
 .idea/
 .DS_Store
+/.pytest_cache/
