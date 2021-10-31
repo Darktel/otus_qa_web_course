@@ -26,9 +26,3 @@ class Square(Figure):
         :return: float or int
         """
         return 4 * self.side_a
-
-
-if __name__ == '__main__':
-    triangle1 = Square('', side_a=7)
-    print(triangle1.area())
-    print(triangle1.perimeter())

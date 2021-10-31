@@ -46,13 +46,3 @@ class Triangle(Figure):
         :return: float or int
         """
         return self.side_a + self.side_b + self.side_c
-
-
-if __name__ == '__main__':
-    triangle1 = Triangle('Треугольник', side_a=1, side_b=3, side_c=3)
-    print(triangle1.side_a)
-    print(triangle1.side_b)
-    print(triangle1.side_c)
-
-    print(triangle1.area)
-    print(triangle1.perimeter)

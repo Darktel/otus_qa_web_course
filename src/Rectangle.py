@@ -30,9 +30,3 @@ class Rectangle(Figure):
         """
 
         return 2 * (self.side_a + self.side_b)
-
-
-if __name__ == '__main__':
-    triangle1 = Rectangle(' ', side_a=10, side_b=5)
-    print(triangle1.area())
-    print(triangle1.perimeter())

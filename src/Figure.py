@@ -17,7 +17,3 @@ class Figure:
         if not isinstance(figure, Figure):
             raise ValueError('При вычислении добавленной площади, передан не верный класс')
         return self.area + figure.area
-
-
-if '__main__' == __name__:
-    figure = Figure('Фигура')
