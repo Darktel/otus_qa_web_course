@@ -1,8 +1,9 @@
 from src.Figure import Figure
 
+
 class Circle(Figure):
 
-    def __init__(self, name: str,  radius: float):
+    def __init__(self, name: str, radius: float):
         """
         Инициализация экземпляра класса круга.
         :param radius: float - Радиус круга.
@@ -34,4 +35,7 @@ if __name__ == '__main__':
     triangle1 = Circle(' ', 7)
     print(triangle1.area)
     print(triangle1.perimeter)
-
+    triangle2 = [55]
+    # print(triangle2.area)
+    # print(triangle2.perimeter)
+    print(triangle1.add_area(triangle2))

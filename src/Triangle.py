@@ -1,7 +1,10 @@
-from Figure import Figure
+from src.Figure import Figure
 
 
 class Triangle(Figure):
+
+
+
 
     def __init__(self, name: str, side_a: float, side_b: float, side_c: float):
         """
@@ -11,14 +14,19 @@ class Triangle(Figure):
         :param side_b: float - Сторона треугольника "B".
         :param side_c: float - Сторона треугольника "C".
         """
+        if side_a > side_b + side_c or side_b > side_a + side_c or side_c > side_b + side_a:
+            self.side_a = None
+            self.side_b = None
+            self.side_c = None
+            self.name = None
+            return None
+
+
         self.side_a = side_a
         self.side_b = side_b
         self.side_c = side_c
         self.name = name
-        if self.side_a > self.side_b + self.side_c or \
-                self.side_b > self.side_a + self.side_c or \
-                self.side_c > self.side_b + self.side_a:
-            return None
+
 
     @property
     def area(self):
@@ -41,6 +49,10 @@ class Triangle(Figure):
 
 
 if __name__ == '__main__':
-    triangle1 = Triangle(side_a=10, side_b=10, side_c=15)
-    print(triangle1.area())
-    print(triangle1.perimeter())
+    triangle1 = Triangle('Треугольник', side_a=1, side_b=3, side_c=3)
+    print(triangle1.side_a)
+    print(triangle1.side_b)
+    print(triangle1.side_c)
+
+    print(triangle1.area)
+    print(triangle1.perimeter)
