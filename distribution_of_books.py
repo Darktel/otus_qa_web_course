@@ -12,6 +12,7 @@ def read_books_csv_file(file: str):
         for _header in stg_header:
             header.append(str(_header).lower())
         for book in reader:
+            book[3] = int(book[3])
             books.append(dict(zip(header[:-1], book[:-1])))
     return books
 
