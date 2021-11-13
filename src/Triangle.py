@@ -3,7 +3,12 @@ from src.Figure import Figure
 
 class Triangle(Figure):
 
+    def __new__(cls,  name: str, side_a: float, side_b: float, side_c: float):
 
+        if side_a > side_b + side_c or side_b > side_a + side_c or side_c > side_b + side_a:
+            return None
+        instance = super().__new__(cls)
+        return instance
 
 
     def __init__(self, name: str, side_a: float, side_b: float, side_c: float):
@@ -14,14 +19,6 @@ class Triangle(Figure):
         :param side_b: float - Сторона треугольника "B".
         :param side_c: float - Сторона треугольника "C".
         """
-        if side_a > side_b + side_c or side_b > side_a + side_c or side_c > side_b + side_a:
-            self.side_a = None
-            self.side_b = None
-            self.side_c = None
-            self.name = None
-            return None
-
-
         self.side_a = side_a
         self.side_b = side_b
         self.side_c = side_c

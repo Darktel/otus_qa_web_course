@@ -1,5 +1,5 @@
 from src.Triangle import Triangle
-
+import pytest
 
 def test_init_triangle():
     triangle = Triangle('Треугольник', 3,4,5)
@@ -7,25 +7,18 @@ def test_init_triangle():
 
 def test_init_wrong_triangle():
     triangle = Triangle('Треугольник', 7,111,5)
-    assert isinstance(triangle, Triangle)
-    assert triangle.side_a is None
+    assert triangle is None
 
 def test_check_name():
     triangle = Triangle('Треугольник', 3,4,5)
     assert triangle.name == 'Треугольник'
 
-
 def test_check_side():
-    triangle = Triangle('Треугольник', 3,4,5)
+    triangle = Triangle('T', 3,4,5)
     assert triangle.side_a == 3
     assert triangle.side_b == 4
     assert triangle.side_c == 5
 
-def test_check_side():
-    triangle = Triangle('Треугольник', 3,4,5)
-    assert triangle.side_a == 3
-    assert triangle.side_b == 4
-    assert triangle.side_c == 5
 
 def test_check_perimeter_triangle():
     triangle = Triangle('Треугольник', 5.7,4,2)

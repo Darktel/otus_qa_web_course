@@ -1,28 +1,13 @@
 from src.Figure import Figure
+from src.Rectangle import Rectangle
 
 
-class Square(Figure):
+class Square(Rectangle):
 
-    def __init__(self, name: str, side_a: float):
+    def __init__(self, name: str, side_a: int):
         """
-        Инициализация экземпляра класса квадрата.
+        Инициализация экземпляра класса прямоугольника.
         :param side_a: float - Сторона квадрата "A".
+        :param side_b: float - Сторона квадрата "B".
         """
-        self.side_a = side_a
-        self.name = name
-
-    @property
-    def area(self):
-        """
-        Вычисление площади квадрата.
-        :return: float or int
-        """
-        return self.side_a ** 2  # Вычисление площади прямоугольника.
-
-    @property
-    def perimeter(self):
-        """
-        Вычисление периметра квадрата
-        :return: float or int
-        """
-        return 4 * self.side_a
+        super().__init__(name, side_a, side_a)
