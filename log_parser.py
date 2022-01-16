@@ -11,15 +11,16 @@ def parse_dir(args):
     :param args: path of log file or path dir.
     :return: path for logs files
     '''
+    _path_to_logfiles = []
     if os.path.isfile(args.file):
-        print('is file')
-        return parse_log_file(log_file=args)
+        return args  # Путь до конкретного лог файла
 
     elif os.path.isdir(args.file):
         for file in os.listdir(args.file):
             if file.endswith(".log"):
-                path_to_logfile = os.path.join(args.file, file)
-                return parse_log_file(path_to_logfile)
+                _path_to_logfile = os.path.join(args.file, file)
+                _path_to_logfiles.append(_path_to_logfile)
+        return _path_to_logfiles  # Путь до перечня лог файлов
 
     else:
         print("ERROR: Incorrect path to log file or directory")
@@ -31,7 +32,6 @@ def parse_log_file(log_file):
     :param log_file:
     :return:
     '''
-
     dict_method = {"COUNT_REQUEST": 0, "METHOD": {"GET": 0, "POST": 0, "PUT": 0, "DELETE": 0, "HEAD": 0, "OPTIONS": 0}}
     dict_ip_requests = defaultdict(int)
     list_ip_duration = []
@@ -49,7 +49,7 @@ def parse_log_file(log_file):
                 dict_method["METHOD"][method.group(1)] += 1
                 dict_ip_requests[ip] += 1
                 dict_data_request = {"METHOD": method.group(1), "URL": "None", "IP": ip, "DURATION": duration,
-                          "DATE": date.group(0).split(" ")[0].lstrip("[")}
+                                     "DATE": date.group(0).split(" ")[0].lstrip("[")}
                 if url:
                     dict_data_request["URL"] = url.group(0).strip("\"")
 
@@ -78,5 +78,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process access.log')
     parser.add_argument('-f', dest='file', action='store', help='log file or Path to logfile')
     args = parser.parse_args()
-    # Можно конечно и одной строкой написать (Функция принимает функцию. Но я не стал усложнять.)
-    parse_dir(args)
+    # Получаем перечень лог файлов.
+    path_logs_files = parse_dir(args)
+    if len(path_logs_files) > 1:  # Если в директории находиться больше 1 лог файла.
+        for path_f in path_logs_files:
+            parse_log_file(path_f)
+    else:
+        parse_log_file(path_logs_files)
