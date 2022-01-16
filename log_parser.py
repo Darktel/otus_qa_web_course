@@ -56,12 +56,12 @@ def parse_log_file(log_file):
                 list_ip_duration.append(dict_data_request)
 
         top3_req = dict(sorted(dict_ip_requests.items(), key=lambda x: x[1], reverse=True)[0:3])
-        top3_uration_requests = sorted(list_ip_duration, key=lambda x: x["DURATION"], reverse=True)[0:3]
+        top3_duration_requests = sorted(list_ip_duration, key=lambda x: x["DURATION"], reverse=True)[0:3]
 
         result = {"count_request": dict_method["COUNT_REQUEST"],
                   "count_stat_method": dict_method["METHOD"],
                   "top3_ip_requests": top3_req,
-                  "top3_duration_requests": top3_uration_requests
+                  "top3_duration_requests": top3_duration_requests
                   }
     return write_json_file(log_file, result)
 
