@@ -13,7 +13,7 @@ def parse_dir(args):
     '''
     _path_to_logfiles = []
     if os.path.isfile(args.file):
-        return args  # Путь до конкретного лог файла
+        return args.file  # Путь до конкретного лог файла
 
     elif os.path.isdir(args.file):
         for file in os.listdir(args.file):
@@ -80,7 +80,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     # Получаем перечень лог файлов.
     path_logs_files = parse_dir(args)
-    if len(path_logs_files) > 1:  # Если в директории находиться больше 1 лог файла.
+    if isinstance(path_logs_files,
+                  list):  # Если вернулся лист, значит в дирректории более 1 файла. Обрабатываем в цикле
         for path_f in path_logs_files:
             parse_log_file(path_f)
     else:
