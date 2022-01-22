@@ -3,6 +3,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pytest
 import random, time
+from Page_Object.MainPage import MainPage
+from Page_Object.CatalogPage import CatalogPage
 
 
 def test_main_page(browser, url):
@@ -11,27 +13,34 @@ def test_main_page(browser, url):
     :param browser:
     :param url: 'https://demo.opencart.com/'
     '''
-    browser.get(url)
+    main_page = MainPage(browser, url)
+    main_page.open()
+    # browser.get(url)
     # Проверка, что колличество элементов в верхней части страницы не изменяется = 7
-    header_links = WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.ID, "top-links")))
-    elements = header_links.find_elements(By.TAG_NAME, 'li')
-    assert len(elements) == 7
+    assert main_page.search_elements_of_headers() == 7
+    # header_links = WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.ID, "top-links")))
+    # elements = header_links.find_elements(By.TAG_NAME, 'li')
+
     # Проверка что первый элемент в избранном действительно macBook. (сталкивался с таким биз. требованием в реальности)
-    freature_product = WebDriverWait(browser, 2).until(
-        EC.visibility_of_element_located((By.CLASS_NAME, "product-layout")))
-    assert 'MacBook' in freature_product.text
+    assert main_page.search_text_freature_product('MacBook')
+    # freature_product = WebDriverWait(browser, 2).until(
+    #     EC.visibility_of_element_located((By.CLASS_NAME, "product-layout")))
+    # assert 'MacBook' in freature_product.text
     # Поиск на странице кнопки Корзины.
-    button_cart = WebDriverWait(browser, 3).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "#cart [type='button']")))
-    assert button_cart.tag_name == 'button'
+    # button_cart =  WebDriverWait(browser, 3).until(
+    #     EC.visibility_of_element_located((By.CSS_SELECTOR, "#cart [type='button']")))
+    # assert button_cart.tag_name == 'button'
+    main_page.search_tag_name_in_button_cart('button')
     # Проверка футера страницы на наличие ссылки О Нас (About Us)
-    footer_imformation = WebDriverWait(browser, 2).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "footer [class='list-unstyled'] [href]")))
-    assert footer_imformation.text == 'About Us'
+    # footer_imformation = WebDriverWait(browser, 2).until(
+    #     EC.visibility_of_element_located((By.CSS_SELECTOR, "footer [class='list-unstyled'] [href]")))
+    # assert footer_imformation.text == 'About Us'
+    assert main_page.search_text_in_footer_information('About Us')
     # Проверка строки поиска - у элемента строки поиска тег input (поле для ввода данных)
-    search = WebDriverWait(browser, 2).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "#search [name='search']")))
-    assert search.tag_name == 'input'
+    # search = WebDriverWait(browser, 2).until(
+    #     EC.visibility_of_element_located((By.CSS_SELECTOR, "#search [name='search']")))
+    # assert search.tag_name == 'input'
+    assert main_page.search_tag_name_in_search_string('input')
 
 
 def test_catalog_page(browser, url):
@@ -39,26 +48,13 @@ def test_catalog_page(browser, url):
     Тесты на каталог товаров - https://demo.opencart.com/index.php?route=product/category&path=20
     :param browser:
     '''
-    browser.get(url + "index.php?route=product/category&path=20")
-
-    section_title = WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#content h2")))
-    assert section_title.text == 'Desktops'
-
-    sort_by = WebDriverWait(browser, 2).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "#input-sort option:first-child")))
-    assert sort_by.get_property('selected')
-
-    cart_btn = WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#cart")))
-    assert cart_btn.is_enabled()
-
-    show_by = WebDriverWait(browser, 2).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "#input-limit option[selected='selected']")))
-    assert int(show_by.text) == 15  # кол-во элементов на странице поумолчению.
-
-    # Колличество товаров на странице ограничивается выбранным значением в фильтре.
-    products = WebDriverWait(browser, 3).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "#content div:nth-child(7):not(.product-layout)")))
-    assert len(products.find_elements(By.CSS_SELECTOR, "div.product-layout")) < int(show_by.text)
+    cataog_page = CatalogPage(browser, url)
+    cataog_page.open()
+    assert cataog_page.search_text_in_section_title('Desktops')
+    assert cataog_page.check_property_section_title('selected')
+    assert cataog_page.check_element_enable((By.CSS_SELECTOR, "#cart"))
+    assert cataog_page.check_default_value_show_by() == 15  # кол-во элементов на странице поумолчению.
+    assert cataog_page.check_count_product_in_page()
 
 
 def test_product_card(browser, url):
