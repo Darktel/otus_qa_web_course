@@ -5,6 +5,7 @@ import pytest
 import random, time
 from Page_Object.MainPage import MainPage
 from Page_Object.CatalogPage import CatalogPage
+from Page_Object.ProductPage import ProductPage
 
 
 def test_main_page(browser, url):
@@ -15,31 +16,15 @@ def test_main_page(browser, url):
     '''
     main_page = MainPage(browser, url)
     main_page.open()
-    # browser.get(url)
     # Проверка, что колличество элементов в верхней части страницы не изменяется = 7
     assert main_page.search_elements_of_headers() == 7
-    # header_links = WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.ID, "top-links")))
-    # elements = header_links.find_elements(By.TAG_NAME, 'li')
-
     # Проверка что первый элемент в избранном действительно macBook. (сталкивался с таким биз. требованием в реальности)
     assert main_page.search_text_freature_product('MacBook')
-    # freature_product = WebDriverWait(browser, 2).until(
-    #     EC.visibility_of_element_located((By.CLASS_NAME, "product-layout")))
-    # assert 'MacBook' in freature_product.text
     # Поиск на странице кнопки Корзины.
-    # button_cart =  WebDriverWait(browser, 3).until(
-    #     EC.visibility_of_element_located((By.CSS_SELECTOR, "#cart [type='button']")))
-    # assert button_cart.tag_name == 'button'
     main_page.search_tag_name_in_button_cart('button')
     # Проверка футера страницы на наличие ссылки О Нас (About Us)
-    # footer_imformation = WebDriverWait(browser, 2).until(
-    #     EC.visibility_of_element_located((By.CSS_SELECTOR, "footer [class='list-unstyled'] [href]")))
-    # assert footer_imformation.text == 'About Us'
     assert main_page.search_text_in_footer_information('About Us')
     # Проверка строки поиска - у элемента строки поиска тег input (поле для ввода данных)
-    # search = WebDriverWait(browser, 2).until(
-    #     EC.visibility_of_element_located((By.CSS_SELECTOR, "#search [name='search']")))
-    # assert search.tag_name == 'input'
     assert main_page.search_tag_name_in_search_string('input')
 
 
@@ -62,36 +47,22 @@ def test_product_card(browser, url):
     Карточку товара - https://demo.opencart.com/index.php?route=product/product&path=20&product_id=44
     :param browser:
     '''
-    browser.get(url + "index.php?route=product/product&path=20&product_id=44")
+    product_page = ProductPage(browser, url)
+    product_page.open()
     # Тест на корректное наименование товара
-    assert WebDriverWait(browser, 2).until(EC.visibility_of_element_located(
-        (By.CSS_SELECTOR, "#product-product > ul > li:last-child > a"))).text == 'MacBook Air'
+    assert product_page.check_name_product()
     # Тест проверки цены товара
-    price = WebDriverWait(browser, 2).until(EC.visibility_of_element_located(
-        (By.CSS_SELECTOR, "#content > div > div.col-sm-4 > ul:nth-child(4) h2"))).text
-    assert price == '$1,202.00'
+    assert product_page.check_price_product()
     # Тест на доступность кнопки "Add to Cart"
-    assert WebDriverWait(browser, 2).until(EC.element_to_be_clickable(
-        (By.CSS_SELECTOR, "#button-cart"))).get_property('type') == 'button'
+    assert product_page.check_property_button_cart() == 'button'
     # тест на успешное добавление товара в сравнение.
-    WebDriverWait(browser, 2).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-original-title='Compare this Product']"))).click()
-    assert WebDriverWait(browser, 2).until(EC.visibility_of_element_located(
-        (By.CSS_SELECTOR,
-         "#product-product > div.alert.alert-success.alert-dismissible"))).text == 'Success: You have added MacBook Air to your product comparison!\n×'
-
+    product_page.press_compare_button()
+    assert product_page.check_of_successful_addition_to_comparison
     # проверка верного кол-ва добавления товара в корзину.
     count_product = random.randint(1, 10)
-    quantity = WebDriverWait(browser, 2).until(EC.visibility_of_element_located(
-        (By.CSS_SELECTOR, "#input-quantity")))
-    quantity.click()
-    quantity.clear()
-    quantity.send_keys(f'{count_product}')
-    WebDriverWait(browser, 3).until(EC.visibility_of_element_located(
-        (By.CSS_SELECTOR, "#button-cart"))).click()
+    product_page.add_to_cart(str(count_product))  # Добавление товара в корзину
     time.sleep(1)
-    assert f'{count_product} item(s)' in WebDriverWait(browser, 3).until(EC.visibility_of_element_located(
-        (By.CSS_SELECTOR, "#cart-total"))).text
+    product_page.check_count_product_add_to_cart(count_product)  # Проверка кол-ва товара добавленного в корзину.
 
 
 def test_login_admin_page(browser, url):
@@ -99,16 +70,25 @@ def test_login_admin_page(browser, url):
     Страницу логина в админку /admin
     :param browser:
     '''
+    # TODO: вынести елементы в отдельную страницу.
+
     browser.get(url + "/admin/")
+    # TODO: вынеси логику теста в отдельнлый класс
+
     input_login = WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.ID, "input-username")))
     assert input_login.get_attribute("placeholder") == "Username"
+    # TODO: вынеси логику теста в отдельнлый класс
+
     input_password = WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.ID, "input-password")))
     assert input_password.get_attribute("placeholder") == "Password"
+
+    # TODO: вынеси логику теста в отдельнлый класс
 
     button = WebDriverWait(browser, 2).until(EC.element_to_be_clickable(
         (By.CSS_SELECTOR, "button[type='submit']")))
     assert button.get_property('type') == 'submit'
     assert button.text == 'Login'
+    # TODO: вынеси логику теста в отдельнлый класс
 
     input_login.clear()
     input_login.send_keys('demo')
@@ -126,7 +106,10 @@ def test_registration_page(browser, url, localor):
     Страницу регистрации пользователя (/index.php?route=account/register)
     :param browser:
     '''
+    # TODO: вынести елементы в отдельную страницу.
+
     browser.get(url + "/index.php?route=account/register")
+    # TODO: вынеси логику теста в отдельнлый класс
     WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.CSS_SELECTOR, localor))).is_displayed()
 
 
@@ -135,9 +118,12 @@ def test_registration_page_2(browser, url):
     Страницу регистрации пользователя (/index.php?route=account/register)
     :param browser:
     '''
+    # TODO: вынести елементы в отдельную страницу.
     browser.get(url + "/index.php?route=account/register")
+    # TODO: вынеси логику теста в отдельнлый класс
     assert WebDriverWait(browser, 3).until(
         EC.visibility_of_element_located((By.CSS_SELECTOR, "#content > h1"))).text == "Register Account"
+    # TODO: вынеси логику теста в отдельнлый класс
     assert WebDriverWait(browser, 3).until(
         EC.visibility_of_element_located((By.CSS_SELECTOR, "input[type=checkbox]:nth-child(2)"))).get_property(
         'type') == "checkbox"
