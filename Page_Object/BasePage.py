@@ -6,7 +6,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 
 class BasePage:
-    def __init__(self, browser):
+    def __init__(self, browser, url):
         self.browser = browser
 
 

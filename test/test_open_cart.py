@@ -6,6 +6,8 @@ import random, time
 from Page_Object.MainPage import MainPage
 from Page_Object.CatalogPage import CatalogPage
 from Page_Object.ProductPage import ProductPage
+from Page_Object.AdminPage import AdminPage
+from Page_Object.RegisterPage import RegisterPage
 
 
 def test_main_page(browser, url):
@@ -70,33 +72,20 @@ def test_login_admin_page(browser, url):
     Страницу логина в админку /admin
     :param browser:
     '''
-    # TODO: вынести елементы в отдельную страницу.
 
-    browser.get(url + "/admin/")
+    admin_page = AdminPage(browser, url)
+    admin_page.open()
     # TODO: вынеси логику теста в отдельнлый класс
-
-    input_login = WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.ID, "input-username")))
-    assert input_login.get_attribute("placeholder") == "Username"
+    assert admin_page.check_attribute_input_login("Username")
     # TODO: вынеси логику теста в отдельнлый класс
-
-    input_password = WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.ID, "input-password")))
-    assert input_password.get_attribute("placeholder") == "Password"
+    assert admin_page.check_attribute_password_login("Password")
 
     # TODO: вынеси логику теста в отдельнлый класс
-
-    button = WebDriverWait(browser, 2).until(EC.element_to_be_clickable(
-        (By.CSS_SELECTOR, "button[type='submit']")))
-    assert button.get_property('type') == 'submit'
-    assert button.text == 'Login'
+    assert admin_page.check_property_button_submit('submit')
+    assert admin_page.check_text_button_submit('Login')
     # TODO: вынеси логику теста в отдельнлый класс
 
-    input_login.clear()
-    input_login.send_keys('demo')
-    input_password.clear()
-    input_password.send_keys('demo')
-    button.click()
-    assert WebDriverWait(browser, 4).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "#header > div > ul > li.dropdown > a"))).text == "demo demo"
+    assert admin_page.autorization_admin_page(login="demo", password="demo") == "demo demo"
 
 
 @pytest.mark.parametrize('localor', (
@@ -107,8 +96,8 @@ def test_registration_page(browser, url, localor):
     :param browser:
     '''
     # TODO: вынести елементы в отдельную страницу.
-
-    browser.get(url + "/index.php?route=account/register")
+    register_page = RegisterPage(browser, url)
+    register_page.open()
     # TODO: вынеси логику теста в отдельнлый класс
     WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.CSS_SELECTOR, localor))).is_displayed()
 
