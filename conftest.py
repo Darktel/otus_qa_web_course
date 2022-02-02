@@ -8,10 +8,10 @@ DRIVERS = os.path.expanduser("D:\\web_drivers")
 
 
 def pytest_addoption(parser):
-    parser.addoption("--maximized", action="store_true", help="Maximize browser windows")
+    parser.addoption("--maximized", action="store_true", help="Maximize browser windows", default='--maximized')
     parser.addoption("--headless", action="store_true", help="Run headless")
     parser.addoption("--browser", action="store", default="chrome", choices=["chrome", "firefox", "opera"])
-    parser.addoption("--url", action="store", default="https://demo.opencart.com/")
+    parser.addoption("--url", action="store", default="http://localhost:8080/")
 
 
 @pytest.fixture(scope="session")

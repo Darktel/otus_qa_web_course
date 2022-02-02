@@ -11,6 +11,9 @@ class MainPage:
     BUTTON_CART = (By.CSS_SELECTOR, "#cart [type='button']")
     FOOTER_INFORMATION = (By.CSS_SELECTOR, "footer [class='list-unstyled'] [href]")
     SEARCH = (By.CSS_SELECTOR, "#search [name='search']")
+    CURRENCY_LOCATOR = (By.CSS_SELECTOR, "#top .btn-group")
+    CURRENCY_DROPDOWN = (By.CSS_SELECTOR, "#top .btn-group .dropdown-menu")
+    SELECTED_CURRENCY = (By.CSS_SELECTOR, "button.btn-link strong")
 
     def __init__(self, browser, url):
         self.browser = browser
@@ -55,3 +58,26 @@ class MainPage:
                 EC.visibility_of_element_located(self.SEARCH)).tag_name == tag_element
         except TimeoutException:
             raise AssertionError("Cant find element by locator: {}".format(self.SEARCH))
+
+    def change_currency(self, currency):
+        try:
+            WebDriverWait(self.browser, 2).until(
+                EC.element_to_be_clickable(self.CURRENCY_LOCATOR)).click()
+            WebDriverWait(self.browser, 2).until(
+                EC.element_to_be_clickable(self.CURRENCY_DROPDOWN))
+            WebDriverWait(self.browser, 2).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, f".currency-select[name='{currency}']"))).click()
+
+        except TimeoutException:
+            raise AssertionError(f"Cant find element by locator: {self.CURRENCY_LOCATOR}")
+
+    def check_selected_currency(self, text_currency):
+        try:
+            return text_currency in WebDriverWait(self.browser, 2).until(
+                EC.visibility_of_element_located(self.SELECTED_CURRENCY)).text
+
+        except TimeoutException:
+            raise AssertionError(f"Cant find element by locator: {self.SELECTED_CURRENCY}")
+
+
+

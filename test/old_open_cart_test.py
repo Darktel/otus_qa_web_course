@@ -1,13 +1,11 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import pytest
 import random, time
 from Page_Object.MainPage import MainPage
 from Page_Object.CatalogPage import CatalogPage
 from Page_Object.ProductPage import ProductPage
 from Page_Object.AdminPage import AdminPage
 from Page_Object.RegisterPage import RegisterPage
+import pytest
 
 
 def test_main_page(browser, url):
@@ -75,31 +73,22 @@ def test_login_admin_page(browser, url):
 
     admin_page = AdminPage(browser, url)
     admin_page.open()
-    # TODO: вынеси логику теста в отдельнлый класс
     assert admin_page.check_attribute_input_login("Username")
-    # TODO: вынеси логику теста в отдельнлый класс
     assert admin_page.check_attribute_password_login("Password")
-
-    # TODO: вынеси логику теста в отдельнлый класс
     assert admin_page.check_property_button_submit('submit')
     assert admin_page.check_text_button_submit('Login')
-    # TODO: вынеси логику теста в отдельнлый класс
-
     assert admin_page.autorization_admin_page(login="demo", password="demo") == "demo demo"
 
 
-@pytest.mark.parametrize('localor', (
-        '#input-firstname', '#input-lastname', '#input-email', '#input-telephone', '#input-password', '#input-confirm'))
-def test_registration_page(browser, url, localor):
+@pytest.mark.parametrize('locator', ('#input-firstname', '#input-lastname', '#input-email', '#input-telephone', '#input-password', '#input-confirm'))
+def test_registration_page(browser, url, locator):
     '''
     Страницу регистрации пользователя (/index.php?route=account/register)
     :param browser:
     '''
-    # TODO: вынести елементы в отдельную страницу.
     register_page = RegisterPage(browser, url)
     register_page.open()
-    # TODO: вынеси логику теста в отдельнлый класс
-    WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.CSS_SELECTOR, localor))).is_displayed()
+    assert register_page.check_element_in_page(locator)
 
 
 def test_registration_page_2(browser, url):
@@ -107,12 +96,7 @@ def test_registration_page_2(browser, url):
     Страницу регистрации пользователя (/index.php?route=account/register)
     :param browser:
     '''
-    # TODO: вынести елементы в отдельную страницу.
-    browser.get(url + "/index.php?route=account/register")
-    # TODO: вынеси логику теста в отдельнлый класс
-    assert WebDriverWait(browser, 3).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "#content > h1"))).text == "Register Account"
-    # TODO: вынеси логику теста в отдельнлый класс
-    assert WebDriverWait(browser, 3).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "input[type=checkbox]:nth-child(2)"))).get_property(
-        'type') == "checkbox"
+    register_page = RegisterPage(browser, url)
+    register_page.open()
+    assert register_page.check_text_in_header("Register Account")
+    assert register_page.check_property_check_box("checkbox")

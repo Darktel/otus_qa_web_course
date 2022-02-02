@@ -39,7 +39,3 @@ class BasePage:
     def _click_in_element(self, element, locator: tuple, index: int = 0):
         element = element.find_elements(*locator)[index]
         self._click_element(element)
-
-    def click_link(self, link_text):
-        self._click((By.LINK_TEXT, link_text))
-        return self
