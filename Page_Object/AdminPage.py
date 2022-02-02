@@ -100,14 +100,11 @@ class AdminPage:
         return WebDriverWait(self.browser, 3).until(EC.visibility_of_element_located(self.SUCCESS_ALERT)).is_displayed()
 
     def delete_product(self):
-        # TODO: сделать фильтрацию по товару.
         _input_product = WebDriverWait(self.browser, 2).until(EC.visibility_of_element_located(self.FILTER_PRODUCT))
         _input_product.click()
         _input_product.clear()
         _input_product.send_keys('Tesla')
         WebDriverWait(self.browser, 2).until(EC.element_to_be_clickable(self.BUTTON_FILTER_SUBMIT)).click()
-
-        # TODO: ткнуть чек-бокс, и удалить товар.
 
         assert len(WebDriverWait(self.browser, 2).until(
             EC.visibility_of_all_elements_located(self.CHECK_BOX_PRODUCTS))) > 1, 'Нет товара для удаления.'
