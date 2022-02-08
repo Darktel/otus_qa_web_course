@@ -20,7 +20,7 @@ class BasePage:
 
     def _verify_element_presence(self, locator: tuple):
         try:
-            return WebDriverWait(self.browser, 2).until(EC.visibility_of_element_located(locator))
+            return WebDriverWait(self.browser, 3).until(EC.visibility_of_element_located(locator))
         except TimeoutException:
             raise AssertionError("Cant find element by locator: {}".format(locator))
 
@@ -32,6 +32,12 @@ class BasePage:
 
     def _simple_click_element(self, element):
         element.click()
+
+    def _click_allert(self):
+        try:
+            self.browser.switch_to.alert.accept()
+        except:
+            pass
 
     def _click(self, locator: tuple):
         element = self._element(locator)

@@ -39,7 +39,7 @@ def test_catalog_page(browser, url):
     assert cataog_page.search_text_in_section_title('Desktops')
     assert cataog_page.check_property_section_title('selected')
     assert cataog_page.check_element_enable((By.CSS_SELECTOR, "#cart"))
-    assert cataog_page.check_default_value_show_by() == 15  # кол-во элементов на странице поумолчению.
+    assert cataog_page.check_default_value_show_by() == 20  # кол-во элементов на странице поумолчению.
     assert cataog_page.check_count_product_in_page()
 
 

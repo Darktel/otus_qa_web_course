@@ -16,7 +16,7 @@ class RegisterPage:
     TEST_USER = {
         "firstname": "Aleks",
         "lastname": "lex",
-        "email": "test123@tee3est.ru",
+        "email": "test123@t2ee3est.ru",
         "telephone": "880033333333",
         "password": "qwerty",
         "confirm": "qwerty",
@@ -65,10 +65,7 @@ class RegisterPage:
             field.click()
             field.clear()
             field.send_keys(text)
-            try:
-                self.browser.switch_to.alert.accept()
-            except:
-                raise AssertionError("Can't find input element in page")
+
 
     @allure.step("Создание нового пользователя")
     def create_new_user(self):

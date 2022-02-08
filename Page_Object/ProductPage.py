@@ -2,9 +2,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from .BasePage import BasePage
 
-
-class ProductPage:
+class ProductPage(BasePage):
     path = "index.php?route=product/product&path=20&product_id=44"
 
     NAME_PRODUCT = (By.CSS_SELECTOR, "#product-product > ul > li:last-child > a")
@@ -19,11 +19,10 @@ class ProductPage:
     BUTTON_CART = (By.CSS_SELECTOR, "#button-cart")
     CART_TOTAL = (By.CSS_SELECTOR, "#cart-total")
 
-    def __init__(self, browser, url):
-        self.browser = browser
-        self.url = url + self.path
+
 
     def open(self):
+        self.url = self.url + self.path
         self.browser.get(self.url)
         return self
 
@@ -57,6 +56,7 @@ class ProductPage:
 
     def check_of_successful_addition_to_comparison(self):
         try:
+            self._click_allert()
             return WebDriverWait(self.browser, 2).until(
                 EC.visibility_of_element_located(self.ALERT_COMPARE)).text == self.ALERT_MESSAGE_TO_COMPARE
         except TimeoutException:
@@ -64,11 +64,11 @@ class ProductPage:
 
     def add_to_cart(self, count_items: str):
             try:
-                self._element =  WebDriverWait(self.browser, 2).until(
+                self._element_input = WebDriverWait(self.browser, 2).until(
                     EC.visibility_of_element_located(self.INPUT_QUANTITY))
-                self._element.click()
-                self._element.clear()
-                self._element.send_keys(count_items)
+                self._element_input.click()
+                self._element_input.clear()
+                self._element_input.send_keys(count_items)
                 WebDriverWait(self.browser, 2).until(
                     EC.visibility_of_element_located(self.BUTTON_CART)).click()
             except TimeoutException:
