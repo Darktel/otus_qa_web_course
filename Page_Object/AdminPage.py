@@ -2,9 +2,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+import allure
+from .BasePage import BasePage
 
 
-class AdminPage:
+class AdminPage(BasePage):
     path = "admin/"
     INPUT_LOGIN = (By.ID, "input-username")
     INPUT_PASSWORD = (By.ID, "input-password")
@@ -26,20 +28,17 @@ class AdminPage:
     DELETE_BUTTON = (By.CSS_SELECTOR, ".page-header .pull-right button.btn-danger")
     SUCCESS_ALERT = (By.CSS_SELECTOR, ".alert-success")
 
-    def __init__(self, browser, url):
-        self.browser = browser
-        self.url = url + self.path
+
 
     def open(self):
-        self.browser.get(self.url)
-        return self
+        self.url = self.url + self.path
+        with allure.step(f"Открывается страница {self.url}"):
+            self.browser.get(self.url)
+            return self
 
     def check_attribute_input_login(self, value_attribute):
-        try:
-            return WebDriverWait(self.browser, 2).until(
-                EC.visibility_of_element_located(self.INPUT_LOGIN)).get_attribute("placeholder") == value_attribute
-        except TimeoutException:
-            raise AssertionError("Cant find element by locator: {}".format(self.INPUT_LOGIN))
+        return self._verify_element_presence(self.INPUT_LOGIN).get_attribute("placeholder") == value_attribute
+
 
     def check_attribute_password_login(self, value_attribute):
         try:
@@ -48,6 +47,7 @@ class AdminPage:
         except TimeoutException:
             raise AssertionError("Cant find element by locator: {}".format(self.INPUT_PASSWORD))
 
+    @allure.step("Проверка свойства кнопки подтверждения")
     def check_property_button_submit(self, value_property):
         try:
             return WebDriverWait(self.browser, 2).until(
@@ -55,6 +55,7 @@ class AdminPage:
         except TimeoutException:
             raise AssertionError("Cant find element by locator: {}".format(self.BUTTON_SUBMIT))
 
+    @allure.step("Проверка надписи на кнопке подтверждения")
     def check_text_button_submit(self, value_text):
         try:
             return WebDriverWait(self.browser, 2).until(
@@ -62,6 +63,7 @@ class AdminPage:
         except TimeoutException:
             raise AssertionError("Cant find element by locator: {}".format(self.BUTTON_SUBMIT))
 
+    @allure.step("Авторизация в админке")
     def autorization_admin_page(self, login, password):
         input_login = WebDriverWait(self.browser, 2).until(
             EC.visibility_of_element_located(self.INPUT_LOGIN))
@@ -77,10 +79,12 @@ class AdminPage:
         return WebDriverWait(self.browser, 4).until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, "#header > div > ul > li.dropdown > a"))).text
 
+    @allure.step("Открытие каталога продуктов")
     def open_products_list(self):
         WebDriverWait(self.browser, 2).until(EC.element_to_be_clickable(self.CATALOG_MENU)).click()
         WebDriverWait(self.browser, 3).until(EC.element_to_be_clickable(self.CATALOG_PRODUCTS_BUTTON)).click()
 
+    @allure.step("Добавление товара")
     def add_new_product(self, product_name):
         WebDriverWait(self.browser, 2).until(EC.element_to_be_clickable(self.ADD_NEW_BUTTON)).click()
         _input_product = WebDriverWait(self.browser, 3).until(EC.visibility_of_element_located(self.INPUT_PRODUCT_NAME))
@@ -99,6 +103,7 @@ class AdminPage:
         WebDriverWait(self.browser, 2).until(EC.element_to_be_clickable(self.BUTTON_SAVE)).click()
         return WebDriverWait(self.browser, 3).until(EC.visibility_of_element_located(self.SUCCESS_ALERT)).is_displayed()
 
+    @allure.step("Удаление товара")
     def delete_product(self):
         _input_product = WebDriverWait(self.browser, 2).until(EC.visibility_of_element_located(self.FILTER_PRODUCT))
         _input_product.click()

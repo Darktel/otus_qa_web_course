@@ -4,10 +4,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 
-
 class BasePage:
+
     def __init__(self, browser, url):
         self.browser = browser
+        self.url = url
 
 
     def _verify_link_presence(self, link_text):

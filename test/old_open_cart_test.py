@@ -5,7 +5,7 @@ from Page_Object.CatalogPage import CatalogPage
 from Page_Object.ProductPage import ProductPage
 from Page_Object.AdminPage import AdminPage
 from Page_Object.RegisterPage import RegisterPage
-import pytest
+import pytest, allure
 
 
 def test_main_page(browser, url):
@@ -28,6 +28,7 @@ def test_main_page(browser, url):
     assert main_page.search_tag_name_in_search_string('input')
 
 
+@allure.title("Тест страницы категории товаров")
 def test_catalog_page(browser, url):
     '''
     Тесты на каталог товаров - https://demo.opencart.com/index.php?route=product/category&path=20
@@ -42,6 +43,7 @@ def test_catalog_page(browser, url):
     assert cataog_page.check_count_product_in_page()
 
 
+@allure.title("Тест страницы категории товаров")
 def test_product_card(browser, url):
     '''
     Карточку товара - https://demo.opencart.com/index.php?route=product/product&path=20&product_id=44
@@ -65,6 +67,7 @@ def test_product_card(browser, url):
     product_page.check_count_product_add_to_cart(count_product)  # Проверка кол-ва товара добавленного в корзину.
 
 
+@allure.title("Тест функционала авторизации через админку")
 def test_login_admin_page(browser, url):
     '''
     Страницу логина в админку /admin
@@ -77,10 +80,12 @@ def test_login_admin_page(browser, url):
     assert admin_page.check_attribute_password_login("Password")
     assert admin_page.check_property_button_submit('submit')
     assert admin_page.check_text_button_submit('Login')
-    assert admin_page.autorization_admin_page(login="demo", password="demo") == "demo demo"
+    assert admin_page.autorization_admin_page(login="user", password="bitnami") == "John Doe"
 
 
-@pytest.mark.parametrize('locator', ('#input-firstname', '#input-lastname', '#input-email', '#input-telephone', '#input-password', '#input-confirm'))
+@allure.title("Тест наличия элементов на странице регистрации аккаунта")
+@pytest.mark.parametrize('locator', (
+        '#input-firstname', '#input-lastname', '#input-email', '#input-telephone', '#input-password', '#input-confirm'))
 def test_registration_page(browser, url, locator):
     '''
     Страницу регистрации пользователя (/index.php?route=account/register)
@@ -91,6 +96,7 @@ def test_registration_page(browser, url, locator):
     assert register_page.check_element_in_page(locator)
 
 
+@allure.title("Тестналичия элементов на странице регистрации аккаунта")
 def test_registration_page_2(browser, url):
     '''
     Страницу регистрации пользователя (/index.php?route=account/register)

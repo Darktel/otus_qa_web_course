@@ -9,3 +9,5 @@ env/
 *.log
 __pycache__/
 *.png
+allure-results/
+allure-report/
