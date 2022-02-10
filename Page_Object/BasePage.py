@@ -3,13 +3,15 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+import logging
+
 
 class BasePage:
 
     def __init__(self, browser, url):
         self.browser = browser
         self.url = url
-
+        self.logger = logging.getLogger(type(self).__name__)
 
     def _verify_link_presence(self, link_text):
         try:

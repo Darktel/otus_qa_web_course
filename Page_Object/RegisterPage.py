@@ -3,9 +3,10 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import allure
+from .BasePage import BasePage
 
 
-class RegisterPage:
+class RegisterPage(BasePage):
     path = "index.php?route=account/register"
     TITLE_PAGE = (By.CSS_SELECTOR, "#content > h1")
     CHECK_BOX = (By.CSS_SELECTOR, "input[type=checkbox]:nth-child(2)")
@@ -22,50 +23,32 @@ class RegisterPage:
         "confirm": "qwerty",
     }
 
-    def __init__(self, browser, url):
-        self.browser = browser
-        self.url = url + self.path
-
     def open(self):
+        self.url = self.url + self.path
         with allure.step(f"Открывается страница {self.url}"):
             self.browser.get(self.url)
-            try:
-                self.browser.switch_to.alert.accept()
-            except:
-                pass
-
+            self._click_allert()
 
     def check_element_in_page(self, _locator):
-        try:
-            with allure.step(f"Проверка наличия элемента на странице {_locator}"):
-                return WebDriverWait(self.browser, 2).until(
-                    EC.visibility_of_element_located((By.CSS_SELECTOR, _locator))).is_displayed()
-        except TimeoutException:
-            raise AssertionError("Can't find element by locator: {}".format(_locator))
+        with allure.step(f"Проверка наличия элемента на странице {_locator}"):
+            return self._element((By.CSS_SELECTOR, _locator)).is_displayed()
 
     def check_text_in_header(self, value_text):
-        try:
-            with allure.step(f"Проверка что у элемента {self.TITLE_PAGE} текст {value_text}"):
-                return WebDriverWait(self.browser, 2).until(
-                    EC.visibility_of_element_located(self.TITLE_PAGE)).text == value_text
-        except TimeoutException:
-            raise AssertionError("Can't find element by locator: {}".format(self.TITLE_PAGE))
+        with allure.step(f"Проверка что у элемента {self.TITLE_PAGE} текст {value_text}"):
+            return self._element(self.TITLE_PAGE).text == value_text
 
     def check_property_check_box(self, value_property):
         try:
-            return WebDriverWait(self.browser, 2).until(
-                EC.visibility_of_element_located(self.CHECK_BOX)).get_property('type') == value_property
+            return self._element(self.CHECK_BOX).get_property('type') == value_property
         except TimeoutException:
             raise AssertionError("Can't find element by locator: {}".format(self.CHECK_BOX))
 
-
     def _input_text(self, field, text):
         with allure.step(f"Ввод значения {text} в поле лемента {field}"):
-            field = WebDriverWait(self.browser, 2).until(EC.visibility_of_element_located(field))
+            field = self._element(field)
             field.click()
             field.clear()
             field.send_keys(text)
-
 
     @allure.step("Создание нового пользователя")
     def create_new_user(self):
@@ -76,8 +59,4 @@ class RegisterPage:
 
     @allure.step("Проверка успешной регистрации")
     def check_success_register(self):
-        try:
-            return "Your Account Has Been Created!" in WebDriverWait(self.browser, 2).until(
-                EC.visibility_of_element_located(self.MESSAGE_SUCCESS_REGISTER)).text
-        except TimeoutException:
-            raise AssertionError(f"Can't find element by locator: {self.MESSAGE_SUCCESS_REGISTER}")
+        return "Your Account Has Been Created!" in self._element(self.MESSAGE_SUCCESS_REGISTER).text
