@@ -1,6 +1,5 @@
 from Page_Object.RegisterPage import RegisterPage
 from Page_Object.MainPage import MainPage
-import pytest
 import allure
 
 
