@@ -21,6 +21,7 @@ class ProductPage(BasePage):
 
     def open(self):
         self.url = self.url + self.path
+        self.logger.info("Opening url: {}".format(self.url))
         self.browser.get(self.url)
         return self
 
@@ -42,7 +43,7 @@ class ProductPage(BasePage):
 
     def check_of_successful_addition_to_comparison(self):
         try:
-            self._click_allert()
+            self._click_alert()
             return self._element(self.ALERT_COMPARE).text == self.ALERT_MESSAGE_TO_COMPARE
         except TimeoutException:
             raise AssertionError("Cant find element by locator: {}".format(self.ALERT_COMPARE))

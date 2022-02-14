@@ -1,3 +1,4 @@
 selenium
 pytest==6.2.5
 allure-pytest
+pytest-xdist==2.4.0

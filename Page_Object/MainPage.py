@@ -17,6 +17,7 @@ class MainPage(BasePage):
     SELECTED_CURRENCY = (By.CSS_SELECTOR, "button.btn-link strong")
 
     def open(self):
+        self.logger.info("Opening url: {}".format(self.url))
         self.browser.get(self.url)
         return self
 

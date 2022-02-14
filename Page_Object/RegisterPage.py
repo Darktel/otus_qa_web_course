@@ -25,9 +25,10 @@ class RegisterPage(BasePage):
 
     def open(self):
         self.url = self.url + self.path
+        self.logger.info("Opening url: {}".format(self.url))
         with allure.step(f"Открывается страница {self.url}"):
             self.browser.get(self.url)
-            self._click_allert()
+            self._click_alert()
 
     def check_element_in_page(self, _locator):
         with allure.step(f"Проверка наличия элемента на странице {_locator}"):

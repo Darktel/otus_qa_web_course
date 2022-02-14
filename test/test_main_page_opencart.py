@@ -5,8 +5,7 @@ import allure
 
 
 @allure.title("Тест смены отображаемой валюты на странице")
-@pytest.mark.parametrize(("currency", 'currency_symbol'), (('EUR', '€'), ('GBP', '£'), ('USD', '$')))
-def test_switch_currency(browser, url, currency, currency_symbol):
+def test_switch_currency(browser, url, currency='EUR', currency_symbol='€'):
     main_page = MainPage(browser, url)
     main_page.open()
     main_page.change_currency(currency)

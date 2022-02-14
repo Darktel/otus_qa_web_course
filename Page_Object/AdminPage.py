@@ -29,6 +29,7 @@ class AdminPage(BasePage):
 
     def open(self):
         self.url = self.url + self.path
+        self.logger.info("Opening url: {}".format(self.url))
         with allure.step(f"Открывается страница {self.url}"):
             self.browser.get(self.url)
             return self
