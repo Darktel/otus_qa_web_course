@@ -13,6 +13,7 @@ def pytest_addoption(parser):
     parser.addoption("--maximized", action="store_true", help="Maximize browser windows", default='--maximized')
     parser.addoption("--headless", action="store_true", help="Run headless")
     parser.addoption("--browser", action="store", default="chrome", choices=["chrome", "firefox", "opera"])
+    parser.addoption("--br_ver", action="store", default=None)
     parser.addoption("--url", action="store", default="http://192.168.0.105:8090/")
     parser.addoption("--log_level", action="store", default="DEBUG")
     parser.addoption("--executor", action="store", default="192.168.0.105")
@@ -50,6 +51,12 @@ def browser(request):
     maximized = request.config.getoption("--maximized")
     log_level = request.config.getoption("--log_level")
     executor = request.config.getoption("--executor")
+    if request.config.getoption("--br_ver"):
+        br_ver = str(request.config.getoption("--br_ver"))
+    else:
+        br_ver = None
+    if not os.path.isdir("./logs"):
+        os.mkdir("./logs")
 
     logger = logging.getLogger('driver')
     test_name = request.node.name
@@ -81,7 +88,7 @@ def browser(request):
         executor_url = f"http://{executor}:4444/wd/hub"
         capabilities = {
             "browserName": _browser,
-            # "browserVersion": "97.0"
+            "browserVersion": br_ver,
             "selenoid:options": {
                 "enableVNC": True,
                 "enableVideo": False
