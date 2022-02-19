@@ -11,4 +11,4 @@ WORKDIR /app
 COPY requirements.txt ./
 RUN python -m pip install --upgrade pip && pip install -r requirements.txt
 COPY . .
-CMD pytest --url=$URL --browser=$BROWSER --br_ver=$BR_VER --log_level=$LOG_LEVEL --executor=$EXECUTOR --maximized --n=$N
+CMD pytest --url=$URL --browser=$BROWSER --br_ver=$BR_VER --log_level=$LOG_LEVEL --executor=$EXECUTOR --maximized -n=$N
