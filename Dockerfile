@@ -7,7 +7,7 @@ ENV MAXIMIZED="maximized"
 ENV BR_VER=""
 ENV N=""
 
-WORKDIR ./
+WORKDIR /
 COPY requirements.txt ./
 RUN python -m pip install --upgrade pip && pip install -r requirements.txt
 COPY . .
